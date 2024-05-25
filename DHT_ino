@@ -1,0 +1,34 @@
+#include "DHT.h"
+
+#define DPIN 4        // Pin to connect DHT sensor (GPIO number) D2
+#define DTYPE DHT11   // Define DHT 11 or DHT22 sensor type
+
+DHT dht(DPIN, DTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+  delay(2000); // Give sensor time to stabilize
+}
+
+void loop() {
+  delay(2000);
+  
+  float tc = dht.readTemperature(false);  // Read temperature in C
+  float tf = dht.readTemperature(true);   // Read temperature in F
+  float hu = dht.readHumidity();          // Read humidity
+
+  // Check if any reads failed and exit early (to try again)
+  if (isnan(tc) || isnan(tf) || isnan(hu)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  Serial.print("Temp: ");
+  Serial.print(tc);
+  Serial.print(" C, ");
+  Serial.print(tf);
+  Serial.print(" F, Hum: ");
+  Serial.print(hu);
+  Serial.println("%");
+}
